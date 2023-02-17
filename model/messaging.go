@@ -1,19 +1,32 @@
 package model
 
-type SimpleMessage struct {
-	Recipient      SimpleMessageRecipient `json:"recipient"`
-	Messaging_type string                 `json:"messaging_type"`
-	Message        string                 `json:"message"`
+type SimpleTextMessage struct {
+	Object string      `json:"object"`
+	Entry  []EntryData `json:"entry"`
 }
 
-type SimpleMessageRecipient struct {
+type EntryData struct {
+	Id        string          `json:"id"`
+	Time      int             `json:"time"`
+	Messaging []MessagingData `json:"messaging"`
+}
+
+type MessagingData struct {
+	Sender    SenderData    `json:"sender"`
+	Recipient RecipientData `json:"recipient"`
+	Timestamp int           `json:"timestamp"`
+	Message   MessageData   `json:"message"`
+}
+
+type SenderData struct {
 	Id string `json:"id"`
 }
 
-type SimpleMessageText struct {
-	Text string `json:"text"`
+type RecipientData struct {
+	Id string `json:"id"`
 }
 
-func NewSimpleMessage() *SimpleMessage {
-	return &SimpleMessage{}
+type MessageData struct {
+	Mid  string `json:"mid"`
+	Text string `json:"text"`
 }

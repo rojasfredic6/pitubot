@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
 
 	auth "pitubot/data"
-	sm "pitubot/model"
+	messaging "pitubot/model"
 )
 
 func main() {
@@ -27,10 +26,20 @@ func main() {
 	})
 
 	e.POST("/webhook", func(c echo.Context) error {
-		fmt.Println(c.Request().GetBody())
+		var message messaging.SimpleTextMessage
+
+		err := c.Bind(&message)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "bad request")
+		}
+		if len(message.Entry) > 0 && len(message.Entry[0].Messaging) > 0 {
+			for _, entry := range message.Entry[0].Messaging {
+				print(entry.Message.Text)
+			}
+		}
+
 		return nil
 	})
-	print(sm.NewSimpleMessage())
 
 	e.Logger.Fatal(e.Start(":8080"))
 
